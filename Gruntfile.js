@@ -21,11 +21,19 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      options: {
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+      },
+      build: {
+        src: 'src/<%= pkg.name %>.js',
+        dest: 'build/<%= pkg.name %>/min.js'
+      }
     },
 
     jshint: {
       files: [
         // Add filespec list here
+
       ],
       options: {
         force: 'true',
@@ -59,6 +67,7 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
+        script: 'server.js'
       }
     },
   });
@@ -90,7 +99,8 @@ module.exports = function(grunt) {
   ////////////////////////////////////////////////////
 
   grunt.registerTask('test', [
-    'mochaTest'
+    'mochaTest',
+    'nodemon'
   ]);
 
   grunt.registerTask('build', [
@@ -99,6 +109,7 @@ module.exports = function(grunt) {
   grunt.registerTask('upload', function(n) {
     if(grunt.option('prod')) {
       // add your production server task here
+      grunt.task.run([ 'shell.prodServer' ]);
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
@@ -106,6 +117,10 @@ module.exports = function(grunt) {
 
   grunt.registerTask('deploy', [
     // add your deploy tasks here
+    'concat',
+    'uglify',
+
+
   ]);
 
 
