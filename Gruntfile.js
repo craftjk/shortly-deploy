@@ -9,7 +9,7 @@ module.exports = function(grunt) {
           '<%= grunt.template.today("yyyy-mm-dd") %> */',
       },
       dist: {
-        src: ['client/*.js'],
+        src: ['public/client/*.js'],
         dest: 'public/client/production.js',
       },
     },
