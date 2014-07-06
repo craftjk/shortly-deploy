@@ -31,18 +31,22 @@ module.exports = function(grunt) {
 
     uglify: {
       options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        mangle: true,
+        compress: {
+          drop_console: true
+        }
       },
-      build: {
-        src: 'src/<%= pkg.name %>.js',
-        dest: 'build/<%= pkg.name %>/min.js'
-      }
-    },
+      dist: {
+        files: {
+          'public/dist/app.js': ['public/client/*.js']
+        }
+			}
+		},
 
     jshint: {
       files: [
         // Add filespec list here
-
+				src: [ 'Gruntfile.js', 'public/client/*.js' ]
       ],
       options: {
         force: 'true',
@@ -55,6 +59,11 @@ module.exports = function(grunt) {
     },
 
     cssmin: {
+      dist: {
+        files: {
+          'public/dist/style.css': ['public/style.css']
+        }
+      }
     },
 
     watch: {
@@ -76,7 +85,6 @@ module.exports = function(grunt) {
 
     shell: {
       prodServer: {
-        script: 'server.js'
       }
     },
   });
@@ -108,11 +116,14 @@ module.exports = function(grunt) {
   ////////////////////////////////////////////////////
 
   grunt.registerTask('test', [
-    'mochaTest',
-    'nodemon'
+    'mochaTest'
   ]);
 
   grunt.registerTask('build', [
+    'jshint',
+    'test',
+    'uglify',
+    'cssmin'
   ]);
 
   grunt.registerTask('upload', function(n) {
@@ -126,12 +137,12 @@ module.exports = function(grunt) {
 
   grunt.registerTask('deploy', [
     // add your deploy tasks here
-    'concat',
-    'uglify'
-
+    'build',
+    'upload'
   ]);
 
-  grunt.registerTask('default', ['concat', 'nodemon']);
-
-
+  grunt.registerTask('default', function() {
+    grunt.option('prod', true);
+    grunt.task.run([ 'upload' ]);
+  });
 };
