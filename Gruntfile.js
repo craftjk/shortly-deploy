@@ -6,7 +6,7 @@ module.exports = function(grunt) {
       options: {
         stripBanners: true,
         banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-          '<%= grunt.template.today("yyyy-mm-dd") %> */',
+          '<%= grunt.template.today("yyyy-mm-dd") %> */\n',
       },
       dist: {
         src: ['public/client/*.js'],
@@ -127,10 +127,11 @@ module.exports = function(grunt) {
   grunt.registerTask('deploy', [
     // add your deploy tasks here
     'concat',
-    'uglify',
-
+    'uglify'
 
   ]);
+
+  grunt.registerTask('default', ['concat', 'nodemon']);
 
 
 };
